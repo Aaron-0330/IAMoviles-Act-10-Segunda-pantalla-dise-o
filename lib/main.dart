@@ -37,7 +37,7 @@ class PantallaHerramientas extends StatelessWidget {
                 builder: (context) => const DetalleProducto(
                   nombre: "Foco LED Smart Pro",
                   precio: "\$12.50",
-                  imagen: "https://cdn.homedepot.com.mx/productos/226670/226670-d.jpg",
+                  imagen: "https://raw.githubusercontent.com/Aaron-0330/IAMoviles-Act-10-Segunda-pantalla-dise-o/refs/heads/main/226670-d.jpg",
                   stock: 15,
                   descripcion: "Foco inteligente con control de temperatura de color y compatibilidad con asistentes de voz. Ideal para interiores y ahorro de energía eficiente para el hogar moderno.",
                 ),
@@ -81,7 +81,6 @@ class DetalleProducto extends StatelessWidget {
         backgroundColor: azulOscuro,
         title: const Text("Detalles", style: TextStyle(color: Colors.white)),
       ),
-      // --- EL BOTÓN AHORA ESTÁ AQUÍ (SIEMPRE VISIBLE) ---
       bottomNavigationBar: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
@@ -106,28 +105,52 @@ class DetalleProducto extends StatelessWidget {
           ),
         ),
       ),
-      // ------------------------------------------------
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Proporción de imagen ajustada
+            // --- CONTENEDOR DE IMAGEN CORREGIDO ---
             Container(
-              height: 320,
+              height: 350,
               width: double.infinity,
               color: Colors.white,
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Image.network(
-                  imagen,
-                  fit: BoxFit.contain,
-                  errorBuilder: (context, error, stackTrace) => const Icon(Icons.broken_image, size: 50),
-                ),
+              child: Image.network(
+                imagen,
+                fit: BoxFit.contain,
+                // Esto ayuda a manejar la carga en DartPad/Navegador
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return const Center(
+                    child: CircularProgressIndicator(color: azulOscuro),
+                  );
+                },
+                // Si el servidor de Home Depot bloquea la imagen, muestra esto:
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    color: Colors.grey[100],
+                    child: const Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.image_not_supported_outlined, size: 60, color: Colors.grey),
+                        SizedBox(height: 10),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 40),
+                          child: Text(
+                            "La imagen no pudo ser cargada desde el servidor externo",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.grey, fontSize: 12),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
             ),
+            // ---------------------------------------
 
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -142,7 +165,6 @@ class DetalleProducto extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
 
-                  // Etiqueta de existencia
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
@@ -177,7 +199,6 @@ class DetalleProducto extends StatelessWidget {
                       style: const TextStyle(color: Colors.black87, height: 1.5, fontSize: 15),
                     ),
                   ),
-                  // Espacio extra al final para que el scroll no choque con el botón fijo
                   const SizedBox(height: 20),
                 ],
               ),
